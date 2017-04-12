@@ -25,8 +25,11 @@
           (pages/home request))
         (GET "/site/collections/landing-pages" request
           (pages/landing-links request))
-        (GET "/site/collections/eosdis-landing-pages" request
+        (GET "/site/collections/landing-pages/eosdis" request
           (pages/eosdis-landing-links request))
+        (GET "/site/collections/landing-pages/:provider-id/:tag"
+          [provider-id tag :as request]
+          (pages/proivider-tag-landing request provider-id tag))
         ;; Add routes for API documentation
         (api-docs/docs-routes
           (get-in system [:public-conf :protocol])

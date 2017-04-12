@@ -29,8 +29,19 @@
     (data/get-landing-links request)))
 
 (defn eosdis-landing-links
-  "Prepare the page that provides links to all the EOSDIS landing pages."
+  "Prepare the page that provides links to top-level EOSDIS providers.
+
+  The intention is for the provider pages linked on this page will have links
+  to complete collections."
   [request]
   (render-template-ok
     "templates/eosdis-landing-links.html"
     (data/get-eosdis-landing-links request)))
+
+(defn proivider-tag-landing
+  "Prepare the page that provides links to collection landing pages based
+  upon a provider and a tag."
+  [request provider-id tag]
+  (render-template-ok
+    "templates/provider-tag-landing-links.html"
+    (data/get-provider-tag-landing-links request provider-id tag)))

@@ -35,7 +35,7 @@
 
 (deftest eosdis-landing-links-page
   (testing "eosdis collections landing links page returns content"
-    (let [path "/site/collections/eosdis-landing-pages"
+    (let [path "/site/collections/landing-pages/eosdis"
           response (site (request :get (str "https://cmr.example.com/search" path)))]
       (is (= (:status response) 200))
       (is (substring? "Landing Pages for EOSDIS Collections" (:body response))))))
