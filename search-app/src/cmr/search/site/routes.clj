@@ -1,6 +1,6 @@
 (ns cmr.search.site.routes
   "This namespace is the one responsible for the routes intended for human
-  consumption."
+  consumption (via a web browser)."
   (:require
     ;; Third-party libs
     [compojure.core :refer :all]
