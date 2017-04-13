@@ -13,35 +13,35 @@
 
 (defn home
   "Prepar the home page template."
-  [request]
+  [context]
   (render-template-ok
     "templates/index.html"
-    (data/get-index request)))
+    (data/get-index context)))
 
 (defn landing-links
   "Prepare the page that links to all landing page links.
 
   For now, this is just a page with a single link (the EOSDIS collections
   landing pages)."
-  [request]
+  [context]
   (render-template-ok
     "templates/landing-links.html"
-    (data/get-landing-links request)))
+    (data/get-landing-links context)))
 
 (defn eosdis-landing-links
   "Prepare the page that provides links to top-level EOSDIS providers.
 
   The intention is for the provider pages linked on this page will have links
   to complete collections."
-  [request]
+  [context]
   (render-template-ok
     "templates/eosdis-landing-links.html"
-    (data/get-eosdis-landing-links request)))
+    (data/get-eosdis-landing-links context)))
 
 (defn proivider-tag-landing
   "Prepare the page that provides links to collection landing pages based
   upon a provider and a tag."
-  [request provider-id tag]
+  [context provider-id tag]
   (render-template-ok
     "templates/provider-tag-landing-links.html"
-    (data/get-provider-tag-landing-links request provider-id tag)))
+    (data/get-provider-tag-landing-links context provider-id tag)))

@@ -27,13 +27,13 @@
 
 (defn get-index
   "Return the data for the index page (none for now)."
-  [request]
+  [context]
   {})
 
 (defn get-landing-links
   "Provide the list of links that will be rendered on the general landing
   pages page."
-  [request]
+  [context]
   {:links [{:href "/site/collections/landing-pages/eosdis"
             :text "Landing Pages for EOSDIS Collections"}]})
 
@@ -52,13 +52,13 @@
 (defn get-eosdis-landing-links
   "Generate the data necessary to render EOSDIS landing page links (basically,
   a list of providers)."
-  [request]
-  (let [providers (mdb/get-providers (:request-context request))]
+  [context]
+  (let [providers (mdb/get-providers context)]
     {:providers (map (partial provider-data "gov.nasa.eosdis") providers)}))
 
 (defn get-provider-tag-landing-links
   "Generate the data necessary to render EOSDIS landing page links."
-  [request provider-id tag]
+  [context provider-id tag]
   ;; XXX query collections by tag and provider id
   {:provider-name provider-id
    :provider-id provider-id

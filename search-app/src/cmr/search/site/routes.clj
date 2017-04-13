@@ -21,15 +21,18 @@
         ;; but have the last entry as a 404 renderer, and as such, would
         ;; prevent any pages in the "site" context from rendering after that
         ;; point.
-        (GET "/" request
-          (pages/home request))
-        (GET "/site/collections/landing-pages" request
-          (pages/landing-links request))
-        (GET "/site/collections/landing-pages/eosdis" request
-          (pages/eosdis-landing-links request))
+        (GET "/"
+          {context :request-context}
+          (pages/home context))
+        (GET "/site/collections/landing-pages"
+          {context :request-context}
+          (pages/landing-links context))
+        (GET "/site/collections/landing-pages/eosdis"
+          {context :request-context}
+          (pages/eosdis-landing-links context))
         (GET "/site/collections/landing-pages/:provider-id/:tag"
-          [provider-id tag :as request]
-          (pages/proivider-tag-landing request provider-id tag))
+          [provider-id tag :as {context :request-context}]
+          (pages/proivider-tag-landing context provider-id tag))
         ;; Add routes for API documentation
         (api-docs/docs-routes
           (get-in system [:public-conf :protocol])
