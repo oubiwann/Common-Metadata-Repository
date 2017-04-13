@@ -10,6 +10,8 @@
   this context; the data functions defined herein are specifically for use
   in page templates, structured explicitly for their needs."
   (:require
+    [cmr.common-app.services.search.query-execution :as query-exec]
+    [cmr.search.services.query-service :as query-svc]
     [cmr.transmit.metadata-db :as mdb]))
 
 (defn get-tag-short-name
@@ -37,6 +39,13 @@
   {:links [{:href "/site/collections/landing-pages/eosdis"
             :text "Landing Pages for EOSDIS Collections"}]})
 
+(defn get-eosdis-landing-links
+  "Generate the data necessary to render EOSDIS landing page links (basically,
+  a list of providers)."
+  [context]
+  (let [providers (mdb/get-providers context)]
+    {:providers (map (partial provider-data "gov.nasa.eosdis") providers)}))
+
 (defn doi-link
   "Given DOI umm data of the form `{:doi <STRING>}`, generate a landing page
   link."
@@ -49,17 +58,24 @@
   [cmr-host concept-id]
   (format "https://%s/concepts/%s.html" cmr-host concept-id))
 
-(defn get-eosdis-landing-links
-  "Generate the data necessary to render EOSDIS landing page links (basically,
-  a list of providers)."
-  [context]
-  (let [providers (mdb/get-providers context)]
-    {:providers (map (partial provider-data "gov.nasa.eosdis") providers)}))
+(defn make-link
+  "Given a single item from a query's collections, generate an appropriate
+  landing page link."
+  [coll]
+  {})
 
 (defn get-provider-tag-landing-links
   "Generate the data necessary to render EOSDIS landing page links."
   [context provider-id tag]
-  ;; XXX query collections by tag and provider id
-  {:provider-name provider-id
-   :provider-id provider-id
-   :tag-name (get-tag-short-name tag)})
+  (let [query (query-svc/make-concepts-query
+                context
+                :collection
+                {:tag_key tag
+                 :provider provider-id
+                 :result-format {:format :umm-json-results}})
+        colls (:items (query-exec/execute-query context query))]
+    {:provider-name provider-id
+     :provider-id provider-id
+     :tag-name (get-tag-short-name tag)
+     :links (map make-link colls)}))
+
