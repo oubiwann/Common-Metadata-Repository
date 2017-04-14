@@ -1,6 +1,9 @@
 (ns cmr.search.test.site.data
   (:require [clojure.test :refer :all]
-            [cmr.search.site.data :as data]))
+            [cmr.search.site.data :as data]
+            [cmr.transmit.config :as config]))
+
+(def cmr-base-url "http://cmr.test.host/")
 
 (def coll-data-1
   {:meta
@@ -69,8 +72,8 @@
     (is (data/has-doi? coll-data-2))))
 
 (deftest cmr-link
-  (is (= (data/cmr-link "cmr.host" "C1200000003-PROV1")
-         "https://cmr.host/concepts/C1200000003-PROV1.html")))
+  (is (= (data/cmr-link cmr-base-url "C1200000003-PROV1")
+         "http://cmr.test.host/concepts/C1200000003-PROV1.html")))
 
 (deftest doi-link
   (is (= (data/doi-link {"DOI" "doi6" "Authority" "auth6"})
@@ -78,10 +81,10 @@
 
 (deftest make-href
   (testing "with no doi data (cmr-only)"
-    (is (= (data/make-href coll-data-1)
-           "https://host/concepts/C1200000003-PROV1.html")))
+    (is (= (data/make-href cmr-base-url coll-data-1)
+           "http://cmr.test.host/concepts/C1200000003-PROV1.html")))
   (testing "with doi data"
-    (is (= (data/make-href coll-data-2)
+    (is (= (data/make-href cmr-base-url coll-data-2)
            "http://dx.doi.org/doi6"))))
 
 (deftest get-long-name
@@ -116,35 +119,35 @@
 
 (deftest make-link
   (testing "with an entry title and short name"
-    (is (= (data/make-link coll-data-1)
-           {:href "https://host/concepts/C1200000003-PROV1.html"
+    (is (= (data/make-link cmr-base-url coll-data-1)
+           {:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
             :text "coll3 (s3)"})))
   (testing "with an entry title, short name, and doi"
-    (is (= (data/make-link coll-data-2)
+    (is (= (data/make-link cmr-base-url coll-data-2)
            {:href "http://dx.doi.org/doi6"
             :text "coll3 (s3)"})))
   (testing "with an entry title and no short name"
-    (is (= (data/make-link coll-data-5)
-           {:href "https://host/concepts/C1200000003-PROV1.html"
+    (is (= (data/make-link cmr-base-url coll-data-5)
+           {:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
             :text "coll3"})))
   (testing "with no entry title and short name"
-    (is (= (data/make-link coll-data-3)
-           {:href "https://host/concepts/C1200000003-PROV1.html"
+    (is (= (data/make-link cmr-base-url coll-data-3)
+           {:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
             :text "C1200000003-PROV1 (s3)"})))
   (testing "with no entry title and no short name"
-    (is (= (data/make-link coll-data-4)
-           {:href "https://host/concepts/C1200000003-PROV1.html"
+    (is (= (data/make-link cmr-base-url coll-data-4)
+           {:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
             :text "C1200000003-PROV1"}))))
 
 (deftest make-links
   (let [coll [coll-data-1 coll-data-2 coll-data-3 coll-data-4 coll-data-5]]
-    (is (= (data/make-links coll)
-           [{:href "https://host/concepts/C1200000003-PROV1.html"
+    (is (= (data/make-links cmr-base-url coll)
+           [{:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
              :text "coll3 (s3)"}
             {:href "http://dx.doi.org/doi6", :text "coll3 (s3)"}
-            {:href "https://host/concepts/C1200000003-PROV1.html"
+            {:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
              :text "C1200000003-PROV1 (s3)"}
-            {:href "https://host/concepts/C1200000003-PROV1.html"
+            {:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
              :text "C1200000003-PROV1"}
-            {:href "https://host/concepts/C1200000003-PROV1.html"
+            {:href "http://cmr.test.host/concepts/C1200000003-PROV1.html"
              :text "coll3"}]))))
