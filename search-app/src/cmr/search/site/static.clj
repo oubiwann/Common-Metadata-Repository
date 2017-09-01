@@ -25,7 +25,7 @@
   ;; a place to store context-specific data
   static-data])
 
-(defn generate-api-docs
+(defn- generate-api-docs
   "Generate CMR Search API docs."
   []
   (static/generate
@@ -37,7 +37,7 @@
            :page-title "API Documentation"
            :page-content (static/md-file->html "docs/api.md")})))
 
-(defn generate-site-docs
+(defn- generate-site-docs
   "Generate CMR Search docs for routes and web resources."
   []
   (static/generate
@@ -49,9 +49,13 @@
            :page-title "Site Routes & Web Resource Documentation"
            :page-content (static/md-file->html "docs/site.md")})))
 
-(defn generate-site-resources
-  "Generate CMR Search site resources such as directory pages and XML sitemaps
-  that are too expensive to generate dynamically."
+(defn- generate-site-resources
+  "Generate filesystem files for CMR Search site resources such as directory
+  pages and XML sitemaps that are too expensive to generate dynamically.
+
+  The results of this function are not used in production, but are useful
+  when quickly checking on content generation without having to go poking
+  around in the cache."
   []
   (let [context (map->StaticContext {:cmr-application :search
                                      :execution-context :cli})
@@ -72,10 +76,10 @@
   (case (keyword doc-type)
     :prep (static/prepare-docs)
     :api (generate-api-docs)
-    :site (do
-            (generate-site-docs)
-            (generate-site-resources))
+    :site (generate-site-docs)
+    :static-site (generate-site-resources)
     :all (do
            (-main :prep)
            (-main :api)
-           (-main :site))))
+           (-main :site)
+           (-main :static-site))))
