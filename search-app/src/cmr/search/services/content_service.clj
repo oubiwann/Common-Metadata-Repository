@@ -128,10 +128,6 @@
   "Cache all the content for the expensive routes. This is the function
   intended for use by the static content job scheduler."
   [context]
-  ;; XXX debug
-  (info "context keys:" (keys context))
-  (info "system keys:" (keys (:system context)))
-  ;; XXX end debug
   (info "Generating site content for caching")
   (let [[ms _] (util/time-execution
                 (do
